@@ -5,7 +5,10 @@
  * @copyright Copyright (c) 2018 osCommerce; http://www.oscommerce.com
  * @license GNU General Public License; http://www.oscommerce.com/gpllicense.txt
  */
-/* Modified by Mark Fleeson to enable Catagory Management extensions 2020 */
+/* Categories Manager - Suite to allow disabling categories and general management
+   v 0.1
+   This code is based on the existing category_tree class (C) Original authors.
+*/
 
   class category_tree {
     protected $_data = array();

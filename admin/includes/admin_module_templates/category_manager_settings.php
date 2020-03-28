@@ -13,6 +13,19 @@
 /* Categories Manager - Suite to allow disabling categories and general management
    (C) Mark Fleeson. www.burninglight.co.uk 2020 
 */
+
+$fix_catman = false;
+$fix_catman_data = false;
+
+if($catman_table_exists == false)
+{
+	$fix_catman = true;
+};
+if($catman_data_in_sync == false)
+{
+	$fix_catman_data = true;
+}
+
 ?>
 <div class="col-sm-6 catman-settings-modal">
     <div class="modal fade" id="settings" >
@@ -23,9 +36,17 @@
              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
+				
+		<?php 
+				$lb = "<br /><br />\r\n";
+				
+		?>	
+				
 				<P>Option 1 - Default Category Sort Order</P>
 				<p>Option 2 - Default Site Starting Category</p>
 				<P>Option 3 - </P>
+				
+				?>
              <div class="modal-footer">
             <?php /* <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button><?php echo tep_draw_button(MODULE_CONTENT_FOOTER_MODAL_CART_HEADING_TITLE . ($cart->count_contents() > 0 ? ' (' . $cart->count_contents() . ')' : ''), 'cart', tep_href_link('shopping_cart.php')) . tep_draw_button(IMAGE_BUTTON_CHECKOUT, 'fas fa-angle-right', tep_href_link('checkout_shipping.php', '', 'SSL')); */ ?>
 				 Buttons

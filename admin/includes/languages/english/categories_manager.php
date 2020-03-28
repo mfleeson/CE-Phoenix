@@ -11,7 +11,7 @@
 */
 
 /* Categories Manager - Suite to allow disabling categories and general management
-   (C Mark Fleeson. www.burninglight.co.uk 2020 
+   (C) Mark Fleeson. www.burninglight.co.uk 2020 
 */
 
 const HEADING_TITLE = 'Categories Manager';
@@ -87,3 +87,4 @@ const TEXT_CATEGORIES_SEO_TITLE_COMMENT = ' <small>Replaces the category name in
 
 
 const TEXT_EDIT_CATEGORIES_SEO_TITLE = 'Edit the Category Title for SEO:<br><small>Replaces the category name in the &lt;title&gt; Meta Element<br>and optionally in the Breadcrumb Trail.<br>Leave blank to default to category name.</small>';
+
