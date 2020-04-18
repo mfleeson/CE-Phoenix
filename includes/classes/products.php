@@ -13,7 +13,9 @@ class Products {
 	protected $_data = array();
 	
 	public function __construct() { 
+
 		$this->_data = [];
+
 	}
 	
 	public function getCategoryProducts($catid)
@@ -50,12 +52,50 @@ class Products {
 		
 	}
 	
+	public function getCardProducts()
+	{
+		
+		$this->_data = [];
+		
+		
+		$card_query = tep_db_query("SELECT p.products_id from products p where p.products_status=1 ORDER BY p.products_id DESC LIMIT ".(int)MODULE_CONTENT_CARD_PRODUCTS_MAX_DISPLAY);
+		
+		while($products = tep_db_fetch_array($card_query)) {
+			$this->_data[$products['products_id']] = new Product($products['products_id']);
+		}
+		return $this->_data;
+		
+		
+	}
+	
+	public function getCardProductsParent($parent)
+	{
+		
+		$this->_data = [];
+		
+		
+		$card_query = tep_db_query("SELECT p.products_id from products p INNER JOIN products_to_categories p2c ON p.products_id = p2c.products_id INNER JOIN categories c ON p2c.categories_id = c.categories_id where p.products_status=1  and c.parent_id = ".(int)$parent." ORDER BY p.products_id DESC LIMIT ".(int)MODULE_CONTENT_CARD_PRODUCTS_MAX_DISPLAY);
+		
+		while($products = tep_db_fetch_array($card_query)) {
+			$this->_data[$products['products_id']] = new Product($products['products_id']);
+		}
+		return $this->_data;
+		
+		
+	}
+	
+	
+	
 	public function getData($key = null) { // Get everything stored about the product
 		if ( isset($this->_data[$key]) ) {
 			return $this->_data[$key];
 		}
 			
 		return $this->_data;
+	}
+	
+	public function getCount() {
+		return count($this->_data);
 	}
 }
 

@@ -42,6 +42,25 @@ class Product {
 					$this->_data['categories'][] = $categories;
 				}
 				
+				/* Get product special pricing */
+				$specials_query = tep_db_query("select * from specials where products_id='".(int)$id."';");
+				$special = tep_db_fetch_array($specials_query); 
+				$specials_data = [];
+				$specials_data['is_special'] = 0;
+				$specials_data['specials_new_products_price'] = 0;
+						
+				if ( tep_db_num_rows($product_query) == 1 ) {
+					if($special['status'] == 1)
+					{
+						$specials_data['is_special'] = 1;
+						$specials_data['specials_new_products_price'] = $special['specials_new_products_price'];
+						
+					}
+				}
+				$this->_data = array_merge($this->_data,$specials_data);
+					
+					
+				
 				/* Get product attributes */
 			/*	$attributes_query = tep_db_query("select categories_id from products_to_categories where products_id='".(int)$id."';");
 				while($attributes = tep_db_fetch_array($attributes_query)) {
@@ -135,6 +154,28 @@ class Product {
       return $this->_data['products_gtin'];
     }
 	
+	public function isSpecial() {
+		return (isset($this->_data['is_special']) && $this->_data['is_special'] == 1);
+	}
+	
+	public function inStock() {
+		return ($this->_data['products_quantity'] > 0 ? true : false);
+	}
+	
+
+	
+	public function getSpecialsPrice() {
+      return $this->_data['specials_new_products_price'];
+    }
+	
+	public function getFinalPrice() {
+		if($this->_data['is_special'] == 1) 
+		{
+			return $this->_data['specials_new_products_price'];
+		}
+		else
+		{ return $this->_data['products_image'];} 
+	}
 }
 
 ?>
