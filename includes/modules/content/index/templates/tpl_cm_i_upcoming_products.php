@@ -6,12 +6,23 @@
         <th class="text-right"><?php echo MODULE_CONTENT_UPCOMING_PRODUCTS_TABLE_HEADING_DATE_EXPECTED; ?></th>
       </tr>
       <?php
-      while ($expected = tep_db_fetch_array($expected_query)) {
-        echo '<tr>';
-        echo '  <td><a href="' . tep_href_link('product_info.php', 'products_id=' . (int)$expected['products_id']) . '">' . $expected['products_name'] . '</a></td>';
-        echo '  <td class="text-right">' . tep_date_short($expected['date_expected']) . '</td>';
-        echo '</tr>';        
-      }
+		//echo '<pre>';print_r($l_Products->getData());echo '</pre>';
+		//exit();
+		echo '<h2>here</h2>';
+		foreach($l_Products->getData() as $l_product)
+		{
+			echo '<tr>';
+			echo '  <td><a href="' . tep_href_link('product_info.php', 'products_id=' . $l_product->getID()) . '">' . $l_product->getTitle() . '</a></td>';
+        echo '  <td class="text-right">' . tep_date_short($l_product->getDateAvailable()) . '</td>';
+        echo '</tr>'; 
+		}
+	/*	foreach($l_Products->getData() as $expected) {
+			var_dump($expected);
+			echo '<tr>';
+			echo '  <td><a href="' . tep_href_link('product_info.php', 'products_id=' . (int)$expected['products_id']) . '">' . $expected['products_name'] . '</a></td>';
+        echo '  <td class="text-right">' . tep_date_short($expected['date_available']) . '</td>';
+        echo '</tr>'; 
+		}*/
       ?>
     </tbody>
   </table>
