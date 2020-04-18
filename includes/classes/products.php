@@ -84,6 +84,27 @@ class Products {
 		
 	}
 	
+	public function GetBestSellers($current_category_id = 0)
+	{
+		$sql = "SELECT DISTINCT p.products_id, pd.products_name FROM products p ";
+      	if ($current_category_id > 0) {
+        $sql .= ", products_to_categories p2c, categories c WHERE p.products_id = p2c.products_id AND p2c.categories_id = c.categories_id AND "
+              . (int)$current_category_id . " IN (c.categories_id, c.parent_id) AND ";
+      	} else {
+        	$sql .= " WHERE ";
+      	}
+      	$sql .= " p.products_status = 1 AND p.products_ordered > 0  ORDER BY p.products_ordered DESC, pd.products_name LIMIT " . MODULE_BOXES_BEST_SELLERS_MAX_DISPLAY;
+		
+		$bestsellers_query = tep_db_query($sql);
+		
+		while($products = tep_db_fetch_array($bestsellers_query)) {
+			$this->_data[$products['products_id']] = new Product($products['products_id']);
+		}
+		return $this->_data;
+	}
+	
+
+	
 	
 	
 	public function getData($key = null) { // Get everything stored about the product
@@ -96,6 +117,20 @@ class Products {
 	
 	public function getCount() {
 		return count($this->_data);
+	}
+	
+	
+	/**********************************************
+	Queries based on indiv products */
+	
+	public function GetWhatsNewProductId()
+	{
+		$random_select = "select p.products_id from products p where p.products_status = '1' order by products_date_added desc limit " . MODULE_BOXES_WHATS_NEW_MAX_RANDOM_SELECT_NEW;
+		
+		$random_product = tep_random_select($random_select);
+			
+		return($random_product['products_id']);
+		
 	}
 }
 

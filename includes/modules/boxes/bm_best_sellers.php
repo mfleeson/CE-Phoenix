@@ -19,7 +19,11 @@
     function execute() {
       global $current_category_id;
 
-      $sql = 'SELECT DISTINCT p.products_id, pd.products_name FROM products p, products_description pd';
+		$l_Products = new Products;
+    
+		$l_Products->GetBestSellers($current_category_id);
+		
+      /*$sql = 'SELECT DISTINCT p.products_id, pd.products_name FROM products p, products_description pd';
       if (isset($current_category_id) && ($current_category_id > 0)) {
         $sql .= ", products_to_categories p2c, categories c WHERE p.products_id = p2c.products_id AND p2c.categories_id = c.categories_id AND "
               . (int)$current_category_id . " IN (c.categories_id, c.parent_id) AND";
@@ -28,14 +32,15 @@
       }
       $sql .= " p.products_status = 1 AND p.products_ordered > 0 AND p.products_id = pd.products_id AND pd.language_id = " . (int)$_SESSION['languages_id'] . " ORDER BY p.products_ordered DESC, pd.products_name LIMIT " . MODULE_BOXES_BEST_SELLERS_MAX_DISPLAY;
 
-      $best_sellers_query = tep_db_query($sql);
-      if (tep_db_num_rows($best_sellers_query) >= MODULE_BOXES_BEST_SELLERS_MIN_DISPLAY) {
+      $best_sellers_query = tep_db_query($sql);*/
+      if ($l_Products->getCount() >= MODULE_BOXES_BEST_SELLERS_MIN_DISPLAY) {
         $best_sellers = [];
 
-        while ($best_seller = tep_db_fetch_array($best_sellers_query)) {
+		  foreach($l_Products->getData() as $l_product) {
+        //while ($best_seller = tep_db_fetch_array($best_sellers_query)) {
           $best_sellers[] = [
-            'link' => tep_href_link('product_info.php', 'products_id=' . (int)$best_seller['products_id']),
-            'text' => $best_seller['products_name'],
+            'link' => tep_href_link('product_info.php', 'products_id=' . (int)$l_product->getID()),
+            'text' => $l_product->getTitle(),
           ];
         }
 

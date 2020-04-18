@@ -55,6 +55,8 @@
 			$data['data-product-price'] = $currencies->display_raw($l_product->getFinalPrice(), tep_get_tax_rate($l_product->getTaxClass()));
 			$data['data-product-manufacturer'] = max(0, (int)$l_product->getManufacturersId());
 
+		  // data attributes
+        $box_attr = '';
 			foreach ( $data as $key => $value ) {
 			  $box_attr .= ' ' . tep_output_string_protected($key) . '="' . tep_output_string_protected($value) . '"';
 			}

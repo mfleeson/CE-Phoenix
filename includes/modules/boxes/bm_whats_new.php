@@ -31,14 +31,19 @@
     }
 
     function execute() {
-      global $currencies, $oscTemplate;
+       	global $currencies, $oscTemplate;
 
-      $data = array();
+       	$data = array();
+	  	$l_products = new Products();
+		$l_product_id = $l_products->GetWhatsNewProductId();
+		$l_product = new Product($l_product_id);
+		
+		
 
-      if ($random_product = tep_random_select("select p.*, pd.*, IF(s.status, s.specials_new_products_price, NULL) as specials_new_products_price, IF(s.status, s.specials_new_products_price, p.products_price) as final_price, p.products_quantity as in_stock, if(s.status, 1, 0) as is_special from products_description pd, products p left join specials s on p.products_id = s.products_id where p.products_status = '1' and p.products_id = pd.products_id and pd.language_id = '" . (int)$_SESSION['languages_id'] . "' order by products_date_added desc limit " . MODULE_BOXES_WHATS_NEW_MAX_RANDOM_SELECT_NEW)) {
-        $data['data-is-special'] = (int)$random_product['is_special'];
-        $data['data-product-price'] = $currencies->display_raw($random_product['final_price'], tep_get_tax_rate($random_product['products_tax_class_id']));
-        $data['data-product-manufacturer'] = max(0, (int)$random_product['manufacturers_id']);
+      if ($l_product->isValid()) {
+        $data['data-is-special'] = (int)$l_product->isSpecial();
+        $data['data-product-price'] = $currencies->display_raw($l_product->getFinalPrice(), tep_get_tax_rate($l_product->getTaxClass()));
+        $data['data-product-manufacturer'] = max(0, (int)$l_product->getManufacturersId());
 
         // data attributes
         $box_attr = '';
@@ -46,18 +51,18 @@
           $box_attr .= ' ' . tep_output_string_protected($key) . '="' . tep_output_string_protected($value) . '"';
         }
         // product title
-        $box_title = '<a href="' . tep_href_link('product_info.php', 'products_id=' . (int)$random_product['products_id']) . '">' . $random_product['products_name'] . '</a>';
+        $box_title = '<a href="' . tep_href_link('product_info.php', 'products_id=' . (int)$l_product->getID()) . '">' . $l_product->getTitle() . '</a>';
         // product image
-        $box_image = '<a href="' . tep_href_link('product_info.php', 'products_id=' . $random_product['products_id']) . '">' . tep_image('images/' . $random_product['products_image'], htmlspecialchars($random_product['products_name']), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, '', true, 'card-img-top') . '</a>';
+        $box_image = '<a href="' . tep_href_link('product_info.php', 'products_id=' . $l_product->getID()) . '">' . tep_image('images/' . $l_product->getImage(), htmlspecialchars($l_product->getTitle()), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, '', true, 'card-img-top') . '</a>';
         // product price
-        if ($random_product['is_special'] == 1) {
-          $box_price = sprintf(IS_PRODUCT_SHOW_PRICE_SPECIAL, $currencies->display_price($random_product['products_price'], tep_get_tax_rate($random_product['products_tax_class_id'])), $currencies->display_price($random_product['specials_new_products_price'], tep_get_tax_rate($random_product['products_tax_class_id'])));
+        if ($l_product->isSpecial() == 1) {
+			  $box_price = sprintf(IS_PRODUCT_SHOW_PRICE_SPECIAL, $currencies->display_price($l_product->getPrice(), tep_get_tax_rate($l_product->getTaxClass())), $currencies->display_price($l_product->getSpecialsPrice(), tep_get_tax_rate($l_product->getTaxClass())));
         } else {
-          $box_price = sprintf(IS_PRODUCT_SHOW_PRICE, $currencies->display_price($random_product['products_price'], tep_get_tax_rate($random_product['products_tax_class_id'])));
+			  $box_price = sprintf(IS_PRODUCT_SHOW_PRICE, $currencies->display_price($l_product->getPrice(), tep_get_tax_rate($l_product->getTaxClass())));
         }
 
         $tpl_data = ['group' => $this->group, 'file' => __FILE__];
-        include 'includes/modules/block_template.php';
+        include ('includes/modules/block_template.php');
       }
     }
 

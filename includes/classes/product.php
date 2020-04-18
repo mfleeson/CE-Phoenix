@@ -176,6 +176,11 @@ class Product {
 		else
 		{ return $this->_data['products_image'];} 
 	}
+	
+	
+	
+	
+	
 }
 
 ?>
