@@ -33,37 +33,46 @@
     function execute() {
       global $currencies, $oscTemplate;
 
-      $random_select = "select r.*, p.*, pd.*, IF(s.status, s.specials_new_products_price, NULL) as specials_new_products_price, IF(s.status, s.specials_new_products_price, p.products_price) as final_price, p.products_quantity as in_stock, if(s.status, 1, 0) as is_special, substring(reviews_text, 1, 60) as reviews_text ";
+     
+		$random_select = "select r.reviews_id,r.products_id,substring(rd.reviews_text, 1, 60) as reviews_text, r.reviews_rating  from reviews r, reviews_description rd where r.reviews_status=1 and rd.reviews_id = r.reviews_id and rd.languages_id = '" . (int)$_SESSION['languages_id'] . "' order by r.reviews_id desc limit " . (int)MODULE_BOXES_REVIEWS_MAX_RANDOM_SELECT_REVIEWS;
+		
+		
+		
+		
+	/*	$random_select = "select r.*, p.*, pd.*, IF(s.status, s.specials_new_products_price, NULL) as specials_new_products_price, IF(s.status, s.specials_new_products_price, p.products_price) as final_price, p.products_quantity as in_stock, if(s.status, 1, 0) as is_special, substring(reviews_text, 1, 60) as reviews_text ";
       $random_select .= "from reviews r, reviews_description rd, products p left join specials s on p.products_id = s.products_id, products_description pd ";
       $random_select .= "where p.products_status = '1' and p.products_id = r.products_id and r.reviews_id = rd.reviews_id and rd.languages_id = '" . (int)$_SESSION['languages_id'] . "' and p.products_id = pd.products_id and pd.language_id = '" . (int)$_SESSION['languages_id'] . "' and r.reviews_status = 1 ";
-      $random_select .= "order by r.reviews_id desc limit " . (int)MODULE_BOXES_REVIEWS_MAX_RANDOM_SELECT_REVIEWS;
+      $random_select .= "order by r.reviews_id desc limit " . (int)MODULE_BOXES_REVIEWS_MAX_RANDOM_SELECT_REVIEWS;*/
       $random_product = tep_random_select($random_select);
       
       $box_attr = $box_title = $box_image = $box_price = $box_review_text = '';
       $data = array();
 
       if ($random_product) {
-        $data['data-is-special'] = (int)$random_product['is_special'];
-        $data['data-product-price'] = $currencies->display_raw($random_product['final_price'], tep_get_tax_rate($random_product['products_tax_class_id']));
-        $data['data-product-manufacturer'] = max(0, (int)$random_product['manufacturers_id']);
+		  $l_product = new Product($random_product['products_id']);
+		 
+			$data['data-is-special'] = (int)$l_product->isSpecial();
+			$data['data-product-price'] = $currencies->display_raw($l_product->getFinalPrice(), tep_get_tax_rate($l_product->getTaxClass()));
+			$data['data-product-manufacturer'] = max(0, (int)$l_product->getManufacturersId());
 
-        foreach ( $data as $key => $value ) {
-          $box_attr .= ' ' . tep_output_string_protected($key) . '="' . tep_output_string_protected($value) . '"';
-        }
-        
-        $box_title = '<a href="' . tep_href_link('product_info.php', 'products_id=' . (int)$random_product['products_id']) . '">' . $random_product['products_name'] . '</a>';
-        $box_image = '<a href="' . tep_href_link('product_info.php', 'products_id=' . $random_product['products_id']) . '">' . tep_image('images/' . $random_product['products_image'], htmlspecialchars($random_product['products_name']), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, '', true, 'card-img-top') . '</a>';
-        if ($random_product['is_special'] == 1) {
-          $box_price = sprintf(IS_PRODUCT_SHOW_PRICE_SPECIAL, $currencies->display_price($random_product['products_price'], tep_get_tax_rate($random_product['products_tax_class_id'])), $currencies->display_price($random_product['specials_new_products_price'], tep_get_tax_rate($random_product['products_tax_class_id'])));
-        } else {
-          $box_price = sprintf(IS_PRODUCT_SHOW_PRICE, $currencies->display_price($random_product['products_price'], tep_get_tax_rate($random_product['products_tax_class_id'])));
-        }
-        $box_review_text .= tep_draw_stars($random_product['reviews_rating']) . '<br>';
-        $box_review_text .= tep_output_string_protected($random_product['reviews_text']) . '...';
-        
-        $tpl_data = ['group' => $this->group, 'file' => __FILE__];
-        include('includes/modules/block_template.php');
-      }
+			foreach ( $data as $key => $value ) {
+			  $box_attr .= ' ' . tep_output_string_protected($key) . '="' . tep_output_string_protected($value) . '"';
+			}
+
+			$box_title = '<a href="' . tep_href_link('product_info.php', 'products_id=' . (int)$l_product->getID()) . '">' . $l_product->getTitle() . '</a>';
+			$box_image = '<a href="' . tep_href_link('product_info.php', 'products_id=' . $l_product->getID()) . '">' . tep_image('images/' . $l_product->getImage(), htmlspecialchars($l_product->getTitle()), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, '', true, 'card-img-top') . '</a>';
+			if ($l_product->isSpecial() == 1) {
+			  $box_price = sprintf(IS_PRODUCT_SHOW_PRICE_SPECIAL, $currencies->display_price($l_product->getPrice(), tep_get_tax_rate($l_product->getTaxClass())), $currencies->display_price($l_product->getSpecialsPrice(), tep_get_tax_rate($l_product->getTaxClass())));
+			} else {
+			  $box_price = sprintf(IS_PRODUCT_SHOW_PRICE, $currencies->display_price($l_product->getPrice(), tep_get_tax_rate($l_product->getTaxClass())));
+			}
+			$box_review_text .= tep_draw_stars($random_product['reviews_rating']) . '<br>';
+			$box_review_text .= tep_output_string_protected($random_product['reviews_text']) . '...';
+
+			$tpl_data = ['group' => $this->group, 'file' => __FILE__];
+			include('includes/modules/block_template.php');
+		  }
+	  
     }
 
     function isEnabled() {
