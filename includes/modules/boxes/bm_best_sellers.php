@@ -21,7 +21,7 @@
 
 		$l_Products = new Products;
     
-		$l_Products->GetBestSellers($current_category_id);
+		$l_Products->getBestSellers($current_category_id);
 		
       /*$sql = 'SELECT DISTINCT p.products_id, pd.products_name FROM products p, products_description pd';
       if (isset($current_category_id) && ($current_category_id > 0)) {

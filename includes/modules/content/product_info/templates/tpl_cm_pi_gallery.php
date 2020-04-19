@@ -1,5 +1,6 @@
 <div class="col-sm-<?php echo $content_width; ?> cm-pi-gallery">
   <?php
+	 $other_img_indicator = $other_img = null;
   $pi_image .= '<a href="#lightbox" class="lb" data-toggle="modal" data-slide="0">';
   $pi_image .= tep_image('images/' . $active_image['image'], tep_db_output( $active_image['htmlcontent']));
   $pi_image .= '</a>';

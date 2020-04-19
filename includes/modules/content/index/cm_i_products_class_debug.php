@@ -27,10 +27,12 @@ error_reporting(-1);
 
 
 		//$l_product = new Product(4); //Shiny red apple
-		$l_products = new Products(3);
-$l_products->getUpcomingProducts();
+		$l_Products = new Products;
+		$l_Products->getCardProducts();
+	//	$l_Products->sortProducts('products_name');
+//$l_Products->sortProducts('products_weight',SORT_NUMERIC);
         $tpl_data = [ 'group' => $this->group, 'file' => __FILE__ ];
-    //    include 'includes/modules/content/cm_template.php';
+     //  include 'includes/modules/content/cm_template.php';
  
     }
 

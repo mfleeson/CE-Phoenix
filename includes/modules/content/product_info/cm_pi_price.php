@@ -19,15 +19,16 @@
     }
 
     function execute() {
-      global $product_info, $currencies;
+      global $l_product, $currencies;
 
       $content_width = (int)MODULE_CONTENT_PI_PRICE_CONTENT_WIDTH;
 
-      $products_price = $currencies->display_price($product_info['products_price'], tep_get_tax_rate($product_info['products_tax_class_id']));
+      $products_price = $currencies->display_price($l_product->getPrice(), tep_get_tax_rate($l_product->getTaxClass()));
       $specials_price = null;
 
-      if ($new_price = tep_get_products_special_price($product_info['products_id'])) {
-        $specials_price = $currencies->display_price($new_price, tep_get_tax_rate($product_info['products_tax_class_id']));
+      if ($new_price = 
+$l_product->getSpecialsPrice()) {
+        $specials_price = $currencies->display_price($new_price, tep_get_tax_rate($l_product->getTaxClass()));
       }
 
       $tpl_data = [ 'group' => $this->group, 'file' => __FILE__ ];

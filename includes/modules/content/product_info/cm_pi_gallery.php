@@ -19,35 +19,37 @@
     }
 
     public function execute() {
-      global $oscTemplate, $product_info;
+      global $oscTemplate, $l_product;
 
       $content_width = (int)MODULE_CONTENT_PI_GALLERY_CONTENT_WIDTH;
       $thumbnail_width = MODULE_CONTENT_PI_GALLERY_CONTENT_WIDTH_EACH;
 
       $pi_image = $pi_thumb = null;
-
-      if (tep_not_null($product_info['products_image'])) {
-        $album_name = sprintf(MODULE_CONTENT_PI_GALLERY_ALBUM_NAME, $product_info['products_name']);
+      if (tep_not_null($l_product->getImage())) {
+        $album_name = sprintf(MODULE_CONTENT_PI_GALLERY_ALBUM_NAME, $l_product->getTitle());
         $album_exit = MODULE_CONTENT_PI_GALLERY_ALBUM_CLOSE;
 
         $pi_html = [];
-        $pi_html[0] = ['image' => $product_info['products_image'], 'htmlcontent' => $product_info['products_name']];
+        $pi_html[0] = ['image' => $l_product->getImage(), 'htmlcontent' => $l_product->getTitle()];
 
-        $pi_query = tep_db_query("select image, htmlcontent from products_images where products_id = '" . (int)$product_info['products_id'] . "' order by sort_order");
-        $pi_total = tep_db_num_rows($pi_query);
+      //  $pi_query = tep_db_query("select image, htmlcontent from $l_product->getImage()s where products_id = '" . (int)$product_info['products_id'] . "' order by sort_order");
+        //$pi_total = tep_db_num_rows($pi_query);
+		  if($l_product->hasPIImages()){
+			  
+		  $pi_images = $l_product->getPIImages();
+			  if (count($pi_images) > 0) {
+				  $pi_counter = 1;
+				  foreach($pi_images as $pi) {
+					  $pi_html[$pi_counter] = $pi['htmlcontent'];
 
-        if ($pi_total > 0) {
-          $pi_counter = 1;
-
-          while ($pi = tep_db_fetch_array($pi_query)) {
-            $pi_html[$pi_counter] = $pi;
-
-            $pi_counter++;
-          }
+					  $pi_counter++;
+				  }
         }
-
+ }
         $active_image = array_shift($pi_html);
         $other_images = $pi_html;
+			  
+		 
 
         $modal_size = MODULE_CONTENT_PI_GALLERY_MODAL_SIZE;
 

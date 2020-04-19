@@ -84,11 +84,11 @@ class Products {
 		
 	}
 	
-	public function GetBestSellers($current_category_id = 0)
+	public function getBestSellers($current_category_id = 0)
 	{
-		$sql = "SELECT DISTINCT p.products_id, pd.products_name FROM products p ";
+		$sql = "SELECT DISTINCT p.products_id FROM products p, products_description pd ";
       	if ($current_category_id > 0) {
-        $sql .= ", products_to_categories p2c, categories c WHERE p.products_id = p2c.products_id AND p2c.categories_id = c.categories_id AND "
+        $sql .= ", products_to_categories p2c, categories c WHERE pd.products_id = p.products_id and p.products_id = p2c.products_id AND p2c.categories_id = c.categories_id AND "
               . (int)$current_category_id . " IN (c.categories_id, c.parent_id) AND ";
       	} else {
         	$sql .= " WHERE ";
@@ -103,8 +103,26 @@ class Products {
 		return $this->_data;
 	}
 	
-
+	public function getProductListing($sql) {
+		$productlisting_query = tep_db_query($sql);
+		
+		while($products = tep_db_fetch_array($productlisting_query)) {
+			$this->_data[$products['products_id']] = new Product($products['products_id']);
+		}
 	
+		return $this->_data;
+	}
+	
+
+	public function sortProducts($fieldname,$sortflags= SORT_REGULAR ) {
+		$newarr = [];
+		foreach ($this->_data as $p)
+		{
+			$newarr[$p->getFieldname($fieldname)] = $p;
+		}
+		sort($newarr,$sortflags);
+		$this->_data = $newarr;
+	}
 	
 	
 	public function getData($key = null) { // Get everything stored about the product

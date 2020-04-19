@@ -1,0 +1,35 @@
+NOTES
+
+$l_product->getID()
+$l_product->getTitle()
+$l_product->getModel()
+$l_product->getQuantity()
+$l_product->hasModel()
+$l_product->getDateAdded()
+$l_product->getDateAvailable()
+$l_product->getDescription()
+$l_product->getGTIN()
+
+$l_product->getImage()
+$l_product->getLastModified()
+$l_product->getManufacturersId()
+$l_product->getFinalPrice()
+$l_product->getPrice()
+$l_product->getProductsOrdered()
+$l_product->getSpecialsPrice()
+$l_product->getTaxClass()
+
+$l_product->getWeight()
+$l_product->isSpecial()
+$l_product->getQuantity()
+$l_product->inStock()
+$l_product->getSEOTitle()
+$l_product->getSEODescription()
+$l_product->getSEOKeywords()
+$l_product->hasPIImages()
+$l_product->getPIImages()
+
+$l_Products = new Products;
+$l_Products->getCardProducts();
+$num_card_products = $l_Products->getCount();
+foreach($l_Products->getData() as $l_product) {

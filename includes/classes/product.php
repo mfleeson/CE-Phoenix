@@ -9,13 +9,20 @@
 
 class Product {
 	
-	protected $_data = array();
+	public $_data = array();
 	
-	public function __construct($id) {
+	public function __construct($id,$check=false) {
 		$this->_data = [];
 		
 		if ( !empty($id) ) {
 			if ( is_numeric($id) ) {
+				if($check == true) {
+					$check_query = tep_db_query("SELECT * FROM products p WHERE p.products_id='".$id."' and p.products_status=1;");
+					$rows_affected = tep_db_num_rows($check_query);
+					return ($rows_affected > 0 ? true:false);
+				}
+				else
+				{
 				/* Get base product */
 				$product_query = tep_db_query("select * from products where products_id='".(int)$id."' and products_status='1';");
 				$selected_product = tep_db_fetch_array($product_query);
@@ -26,8 +33,13 @@ class Product {
 				
 				/* Get product descriptions */
 				$descriptions_query = tep_db_query("select * from products_description where products_id='".(int)$id."';");
+				$ext_data = [];
 				while ($descriptions = tep_db_fetch_array($descriptions_query)) {
 					$this->_data['languages'][$descriptions['language_id']] = $descriptions;
+					if($descriptions['language_id'] == (int)$_SESSION['languages_id'])
+					{
+						$this->_data = array_merge($this->_data,$descriptions);
+					}
 				}
 				
 				/* Get product images */
@@ -48,13 +60,14 @@ class Product {
 				$specials_data = [];
 				$specials_data['is_special'] = 0;
 				$specials_data['specials_new_products_price'] = 0;
+				$specials_data['expires_date'] = '';
 						
 				if ( tep_db_num_rows($product_query) == 1 ) {
 					if($special['status'] == 1)
 					{
 						$specials_data['is_special'] = 1;
 						$specials_data['specials_new_products_price'] = $special['specials_new_products_price'];
-						
+						$specials_data['specials_expires_date'] = $special['expires_date'];
 					}
 				}
 				$this->_data = array_merge($this->_data,$specials_data);
@@ -69,7 +82,7 @@ class Product {
 				//TO SORT ONCE KNOW WHATS NEEDED
 				
 				
-				
+				}
 				
 			}
 		}
@@ -94,7 +107,7 @@ class Product {
 	
 	public function getTitle() {
 	  global $languages_id;	
-      return $this->_data['languages'][$languages_id]['products_name'];
+      return "C-".$this->_data['languages'][$languages_id]['products_name'];
     }
 	
 	public function getDescription() {
@@ -162,7 +175,17 @@ class Product {
 		return ($this->_data['products_quantity'] > 0 ? true : false);
 	}
 	
-
+	public function getSEODescription() {
+		return ($this->_data['products_seo_description']);
+	}
+	
+	public function getSEOKeywords() {
+		return ($this->_data['products_seo_keywords']);
+	}
+	
+	public function getSEOTitle() {
+		return ($this->_data['products_seo_title']);
+	}
 	
 	public function getSpecialsPrice() {
       return $this->_data['specials_new_products_price'];
@@ -174,12 +197,31 @@ class Product {
 			return $this->_data['specials_new_products_price'];
 		}
 		else
-		{ return $this->_data['products_image'];} 
+		{ return $this->_data['products_price'];} 
 	}
 	
+	public function getFieldname($l_fieldname) {
+		return $this->_data[$l_fieldname];
+	}
 	
+	public function hasPIImages() {
+		if(array_key_exists('images',$this->_data)) {
+		return (count($this->_data['images']) > 0 ? true:false);
+		} else { return false; }
+	}
 	
-	
+	public function getPIImages() {
+		return $this->_data('images');
+	}
+	public function getSpecialsExpiresDate() {
+		return $this->_data('specials_expires_date');
+	}
+	public function updateProductViewed()
+	{
+		global $languages_id;
+		$sql = "update products_description set products_viewed = products_viewed+1 where products_id = '" . (int)$this->_data['products_id'] . "' and language_id = '" . (int)$languages_id . "'";
+		return tep_db_query($sql);
+	}
 	
 }
 

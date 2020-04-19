@@ -19,12 +19,12 @@
     }
 
     function execute() {
-      global $product_info;
+      global $l_product;
 
       $content_width = (int)MODULE_CONTENT_PRODUCT_INFO_GTIN_CONTENT_WIDTH;
 
-      if (tep_not_null($product_info['products_gtin'])) {
-        $gtin = substr($product_info['products_gtin'], -MODULE_CONTENT_PRODUCT_INFO_GTIN_LENGTH);
+      if (tep_not_null($l_product->getGTIN())) {
+        $gtin = substr($l_product->getGTIN(), -MODULE_CONTENT_PRODUCT_INFO_GTIN_LENGTH);
 
         $tpl_data = [ 'group' => $this->group, 'file' => __FILE__ ];
         include 'includes/modules/content/cm_template.php';
