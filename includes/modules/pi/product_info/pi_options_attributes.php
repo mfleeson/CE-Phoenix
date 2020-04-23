@@ -32,17 +32,18 @@
     }
 
     function getOutput() {
-      global $currencies, $product_info;
+      global $currencies, $l_product;
 
-      $products_options_name_query = tep_db_query(sprintf(<<<'EOSQL'
+  /*    $products_options_name_query = tep_db_query(sprintf(<<<'EOSQL'
 SELECT DISTINCT popt.products_options_id, popt.products_options_name
   FROM products_options popt INNER JOIN products_attributes patrib ON patrib.options_id = popt.products_options_id
   WHERE patrib.products_id = %d AND popt.language_id = %d
   ORDER BY popt.products_options_name
 EOSQL
-        , (int)$_GET['products_id'], (int)$_SESSION['languages_id']));
+        , (int)$_GET['products_id'], (int)$_SESSION['languages_id']));*/
 
-      if (tep_db_num_rows($products_options_name_query)) {
+      //if (tep_db_num_rows($products_options_name_query)) {
+	  if($l_product->hasAttributes()) {
         $content_width = (int)PI_OA_CONTENT_WIDTH;
 
         $fr_input = $fr_required = '';
@@ -51,47 +52,59 @@ EOSQL
           $fr_required = 'required="required" aria-required="true" ';
         }
 
-        $tax_rate = tep_get_tax_rate($product_info['products_tax_class_id']);
+        $tax_rate = tep_get_tax_rate($l_product->getTaxClass());
 
         $options = [];
-        while ($products_options_name = tep_db_fetch_array($products_options_name_query)) {
+		  
+		$attributes_data = $l_product->getAttributes(); // Gets an array of ProductAttributes, one entry for each set of attributes
+			
+		foreach($attributes_data as $attribute) {  
+		  
+      //  while ($products_options_name = tep_db_fetch_array($products_options_name_query)) {
           $choices = [];
 
           if (PI_OA_HELPER == 'True') {
             $choices[] = ['id' => '', 'text' => PI_OA_ENFORCE_SELECTION];
           }
 
-          $products_options_query = tep_db_query(sprintf(<<<'EOSQL'
+          /*$products_options_query = tep_db_query(sprintf(<<<'EOSQL'
 SELECT pov.products_options_values_id, pov.products_options_values_name, pa.options_values_price, pa.price_prefix
  FROM products_attributes pa INNER JOIN products_options_values pov ON pa.options_values_id = pov.products_options_values_id
  WHERE pa.products_id = %d AND pa.options_id = %d AND pov.language_id = %d
 EOSQL
             , (int)$_GET['products_id'], (int)$products_options_name['products_options_id'], (int)$_SESSION['languages_id']));
-          while ($products_options = tep_db_fetch_array($products_options_query)) {
-            $text = $products_options['products_options_values_name'];
-            if ($products_options['options_values_price'] != '0') {
-              $text .= ' (' . $products_options['price_prefix']
-                     . $currencies->display_price($products_options['options_values_price'], $tax_rate)
-                     . ') ';
-            }
+          while ($products_options = tep_db_fetch_array($products_options_query)) { */
+			$poptions = $attribute->getAttributeOptions();
+				
+				foreach($poptions as $popt) {
+					
+            		$text = $popt['products_options_values_name'];
+					
+					if ($popt['options_values_price'] != '0') {
+					  $text .= ' (' . $popt['price_prefix']
+							 . $currencies->display_price($popt['options_values_price'], $tax_rate)
+							 . ') ';
+					}
 
-            $choices[] = ['id' => $products_options['products_options_values_id'], 'text' => $text];
-          }
+            		$choices[] = ['id' => $popt['products_options_values_id'], 'text' => $text];
+					
+					if (is_string($_GET['products_id'])) {
+						$selected_attribute = $_SESSION['cart']->contents[$_GET['products_id']]['attributes'][$attribute->getAttributeOptionsId()] ?? false;
+					  } else {
+						$selected_attribute = false;
+					 }
+				}
 
-          if (is_string($_GET['products_id'])) {
-            $selected_attribute = $_SESSION['cart']->contents[$_GET['products_id']]['attributes'][$products_options_name['products_options_id']] ?? false;
-          } else {
-            $selected_attribute = false;
-          }
+          
 
           $options[] = [
-            'id' => $products_options_name['products_options_id'],
-            'name' => $products_options_name['products_options_name'],
+            'id' =>  $attribute->getAttributeOptionsId(),
+            'name' => $attribute->getAttributeName(),
             'menu' => tep_draw_pull_down_menu(
-                        'id[' . $products_options_name['products_options_id'] . ']',
+                        'id[' . $attribute->getAttributeOptionsId() . ']',
                         $choices,
                         $selected_attribute,
-                        $fr_required . 'id="input_' . $products_options_name['products_options_id'] . '"'
+                        $fr_required . 'id="input_' . $attribute->getAttributeOptionsId() . '"'
                       ),
           ];
         }

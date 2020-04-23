@@ -17,6 +17,7 @@ $l_product->getFinalPrice()
 $l_product->getPrice()
 $l_product->getProductsOrdered()
 $l_product->getSpecialsPrice()
+$l_product->getSpecialsExpiresDate()
 $l_product->getTaxClass()
 
 $l_product->getWeight()
@@ -29,6 +30,10 @@ $l_product->getSEOKeywords()
 $l_product->hasPIImages()
 $l_product->getPIImages()
 
+
+$l_product->hasAttributes() 
+$l_product->getAttributes()
+	
 $l_Products = new Products;
 $l_Products->getCardProducts();
 $num_card_products = $l_Products->getCount();

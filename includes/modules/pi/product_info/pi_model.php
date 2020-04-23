@@ -32,12 +32,12 @@
     }
     
     function getOutput() {
-      global $product_info;
+      global $l_product;
       
       $content_width = $this->content_width;
 
-      if (tep_not_null($product_info['products_model'])) {
-        $products_model = $product_info['products_model'];
+      if ($l_product->hasModel() == true) {
+        $products_model = $l_product->getModel();
         
         $tpl_data = ['group' => $this->group, 'file' => __FILE__];
         include 'includes/modules/block_template.php';

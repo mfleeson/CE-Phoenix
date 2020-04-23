@@ -19,56 +19,67 @@
     }
 
     function execute() {
-      global $currencies, $product_info;
-
+      global $currencies, $l_product;
+ini_set('display_startup_errors', 1);
+ini_set('display_errors', 1);
+error_reporting(-1);
       $content_width = (int)MODULE_CONTENT_PI_OA_CONTENT_WIDTH;
 
-      $products_options_name_query = tep_db_query("select distinct popt.* from products_options popt, products_attributes patrib where patrib.products_id='" . (int)$_GET['products_id'] . "' and patrib.options_id = popt.products_options_id and popt.language_id = '" . (int)$_SESSION['languages_id'] . "' order by popt.products_options_name");
+		if($l_product->hasAttributes()) {
+			$fr_input = $fr_required = '';
+			if (MODULE_CONTENT_PI_OA_ENFORCE == 'True') {
+			  $fr_input    = FORM_REQUIRED_INPUT;
+			  $fr_required = 'required="required" aria-required="true" ';
+			}
 
-      if (tep_db_num_rows($products_options_name_query)) {
-        $fr_input = $fr_required = '';
-        if (MODULE_CONTENT_PI_OA_ENFORCE == 'True') {
-          $fr_input    = FORM_REQUIRED_INPUT;
-          $fr_required = 'required="required" aria-required="true" ';
-        }
-
-        $options = [];
-        $options_output = null;
-        while ($products_options_name = tep_db_fetch_array($products_options_name_query)) {
-          $option_choices = [];
-
-          if (MODULE_CONTENT_PI_OA_HELPER == 'True') {
-            $option_choices[] = ['id' => '', 'text' => MODULE_CONTENT_PI_OA_ENFORCE_SELECTION];
-          }
-
-          $products_options_query = tep_db_query("select pov.*, pa.* from products_attributes pa, products_options_values pov where pa.products_id = " . (int)$_GET['products_id'] . " and pa.options_id = '" . (int)$products_options_name['products_options_id'] . "' and pa.options_values_id = pov.products_options_values_id and pov.language_id = '" . (int)$_SESSION['languages_id'] . "'");
-          while ($products_options = tep_db_fetch_array($products_options_query)) {
-            $text = $products_options['products_options_values_name'];
-            if ($products_options['options_values_price'] != '0') {
-              $text .= ' (' . $products_options['price_prefix']
-                     . $currencies->display_price($products_options['options_values_price'], tep_get_tax_rate($product_info['products_tax_class_id']))
-                     .') ';
-            }
-            $option_choices[] = ['id' => $products_options['products_options_values_id'], 'text' => $text];
-          }
-
-          if (is_string($_GET['products_id'])) {
-            $selected_attribute = $_SESSION['cart']->contents[$_GET['products_id']]['attributes'][$products_options_name['products_options_id']] ?? false;
-          } else {
-            $selected_attribute = false;
-          }
-
-          $options[] = [
-            'id' => $products_options_name['products_options_id'],
-            'name' => $products_options_name['products_options_name'],
-            'choices' => $option_choices,
-            'selection' => $selected_attribute,
-          ];
-        }
-
+			$options = [];
+			
+			
+			$attributes_data = $l_product->getAttributes(); // Gets an array of ProductAttributes, one entry for each set of attributes
+			
+			foreach($attributes_data as $attribute) {
+				
+			
+				//Set up
+				$options_output = null;
+				$option_choices = [];
+					
+				if (MODULE_CONTENT_PI_OA_HELPER == 'True') {
+					$option_choices[] = ['id' => '', 'text' => MODULE_CONTENT_PI_OA_ENFORCE_SELECTION];
+          		}
+				
+				
+				$poptions = $attribute->getAttributeOptions();
+				
+				foreach($poptions as $popt) {
+					$text = $popt['products_options_values_name'];
+					
+					if ($popt['options_values_price'] != 0) {
+				  		$text .= ' (' . $popt['price_prefix'] . $currencies->display_price( $popt['options_values_price'], tep_get_tax_rate($l_product->getTaxClass())) .') ';
+					}
+					$option_choices[] = ['id' => $popt['products_options_values_id'], 'text' => $text];
+			  
+			  	if (is_string($_GET['products_id'])) {
+           		$selected_attribute = $_SESSION['cart']->contents[$_GET['products_id']]['attributes'][ $attribute->getAttributeOptionsId()] ?? false;
+          		} else {
+            		$selected_attribute = false;
+          		
+				}
+				  
+			}
+				$options[] = [
+					'id' => $attribute->getAttributeOptionsId(),
+					'name' =>  $attribute->getAttributeName(),
+					'choices' => $option_choices,
+					'selection' => $selected_attribute,
+				  ];
+				}
+		
         $tpl_data = [ 'group' => $this->group, 'file' => __FILE__ ];
         include 'includes/modules/content/cm_template.php';
-      }
+      
+		}
+
     }
 
     protected function get_parameters() {

@@ -19,12 +19,12 @@
     }
 
     function execute() {
-      global $product_info;
+      global $l_product;
 
       $content_width = (int)MODULE_CONTENT_PI_DATE_AVAILABLE_CONTENT_WIDTH;
 
-      if ($product_info['products_date_available'] > date('Y-m-d H:i:s')) {
-        $date = (MODULE_CONTENT_PI_DATE_AVAILABLE_STYLE == 'Long') ? tep_date_long($product_info['products_date_available']) : tep_date_short($product_info['products_date_available']);
+      if ($l_product->getDateAvailable() > date('Y-m-d H:i:s')) {
+        $date = (MODULE_CONTENT_PI_DATE_AVAILABLE_STYLE == 'Long') ? tep_date_long($l_product->getDateAvailable()) : tep_date_short($l_product->getDateAvailable());
 
         $tpl_data = [ 'group' => $this->group, 'file' => __FILE__ ];
         include 'includes/modules/content/cm_template.php';
