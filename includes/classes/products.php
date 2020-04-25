@@ -5,6 +5,7 @@
  * @copyright Copyright (c) 2020 osCommerce; http://www.oscommerce.com
  * @license GNU General Public License; http://www.oscommerce.com/gpllicense.txt
  * @author Written for CE-Phoenix by Mark Fleeson mark@burninglight.co.uk 2020 
+ * Release 1.0
  */
 
 /* This class finds and holds lists of product */

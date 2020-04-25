@@ -5,6 +5,7 @@
  * @copyright Copyright (c) 2020 osCommerce; http://www.oscommerce.com
  * @license GNU General Public License; http://www.oscommerce.com/gpllicense.txt
  * @author Written for CE-Phoenix by Mark Fleeson mark@burninglight.co.uk 2020 
+ * Release 1.0
  */
 
 class Product {
@@ -148,7 +149,7 @@ where pa.products_id ='" . ( int )$id . "' AND pa.options_id = '" . ( int )$prod
 
     public function getTitle() {
         global $languages_id;
-        return "C-" . $this->_data[ 'languages' ][ $languages_id ][ 'products_name' ];
+        return  $this->_data[ 'languages' ][ $languages_id ][ 'products_name' ];
     }
 
     public function getDescription() {
@@ -161,7 +162,7 @@ where pa.products_id ='" . ( int )$id . "' AND pa.options_id = '" . ( int )$prod
     }
 
     public function getModel() {
-        return 'C-' . $this->_data[ 'products_model' ];
+        return  $this->_data[ 'products_model' ];
     }
 
     public function getQuantity() {
@@ -173,7 +174,7 @@ where pa.products_id ='" . ( int )$id . "' AND pa.options_id = '" . ( int )$prod
     }
 
     public function getPrice() {
-        return ( float )99 + $this->_data[ 'products_price' ];
+        return ( float ) $this->_data[ 'products_price' ];
     }
 
     public function getDateAdded() {
@@ -229,14 +230,14 @@ where pa.products_id ='" . ( int )$id . "' AND pa.options_id = '" . ( int )$prod
     }
 
     public function getSpecialsPrice() {
-        return 99 + $this->_data[ 'specials_new_products_price' ];
+        return (float) $this->_data[ 'specials_new_products_price' ];
     }
 
     public function getFinalPrice() {
         if ( $this->_data[ 'is_special' ] == 1 ) {
-            return 99 + $this->_data[ 'specials_new_products_price' ];
+            return (float) $this->_data[ 'specials_new_products_price' ];
         } else {
-            return 99 + $this->_data[ 'products_price' ];
+            return (float) $this->_data[ 'products_price' ];
         }
     }
 
@@ -292,7 +293,7 @@ class ProductAttributes {
     }
     public function getAttributeName() {
         global $languages_id;
-        return 'C-'.$this->_data[ $languages_id ][ 'name' ];
+        return $this->_data[ $languages_id ][ 'name' ];
     }
     public function getAttributeOptions() {
         global $languages_id;
