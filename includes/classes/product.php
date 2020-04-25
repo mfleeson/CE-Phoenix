@@ -113,18 +113,7 @@ where pa.products_id ='" . ( int )$id . "' AND pa.options_id = '" . ( int )$prod
                     $attributes_data[ 'Attributes' ] = $product_attributes;
                     $this->_data = array_merge( $this->_data, $attributes_data );
 
-                    //echo '<br><br>';
-                    /*	if($this->_data['HasAttributes'] == true ){
-                    	if($id==10) {
-                    		//	echo '<pre>';var_dump($this->_data);echo '</pre>';
-                    	echo '<pre>';var_dump($this->_data);echo '</pre>';
-                    		exit();
-                    	}
-				
-				
-                    }*/
-
-                }
+				}
             }
 
         }
