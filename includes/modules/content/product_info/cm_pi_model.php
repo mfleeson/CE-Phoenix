@@ -23,8 +23,8 @@
 
       $content_width = (int)MODULE_CONTENT_PI_MODEL_CONTENT_WIDTH;
 
-      if (tep_not_null($l_product->getModel())) {
-        $products_model = $l_product->getModel();
+      if (tep_not_null($l_product->getData('products_model'))) {
+        $products_model = $l_product->getData('products_model');
 
         $tpl_data = [ 'group' => $this->group, 'file' => __FILE__ ];
         include 'includes/modules/content/cm_template.php';

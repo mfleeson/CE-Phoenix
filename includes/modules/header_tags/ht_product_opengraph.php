@@ -27,17 +27,17 @@
         if ( tep_db_num_rows($product_info_query) === 1 ) {
           $product_info = tep_db_fetch_array($product_info_query);*/
 		
-		  $l_product = new Product((int)$_GET['products_id']);
+		  $l_product = new product((int)$_GET['products_id']);
           $data = [
             'og:type' => 'product',
-            'og:title' => $l_product->getTitle(),
+            'og:title' => $l_product->getData('products_name'),
             'og:site_name' => STORE_NAME,
           ];
 
-          $product_description = substr(trim(preg_replace('/\s\s+/', ' ', strip_tags($l_product->getDescription()))), 0, 197) . '...';
+          $product_description = substr(trim(preg_replace('/\s\s+/', ' ', strip_tags($l_product->getData('products_description')))), 0, 197) . '...';
           $data['og:description'] = $product_description;
 
-          $products_image = $l_product->getImage();
+          $products_image = $l_product->getData('products_image');
           //$pi_query = tep_db_query("select image from products_images where products_id = '" . (int)$product_info['products_id'] . "' order by sort_order limit 1");
           //if ( tep_db_num_rows($pi_query) === 1 ) {
           //  $pi = tep_db_fetch_array($pi_query);
@@ -54,14 +54,14 @@
           } else {
             $products_price = $currencies->display_raw($product_info['products_price'], tep_get_tax_rate($product_info['products_tax_class_id']));
           }*/
-			$products_price = $currencies->display_raw($l_product->getFinalPrice(), tep_get_tax_rate($l_product->getTaxClass()));
+			$products_price = $currencies->display_raw($l_product->getFinalPrice(), tep_get_tax_rate($l_product->getData('products_tax_class_id')));
 
           $data['product:price:amount'] = $products_price;
           $data['product:price:currency'] = $_SESSION['currency'];
 
-          $data['og:url'] = tep_href_link('product_info.php', 'products_id=' . $l_product->getID(), 'NONSSL', false);
+          $data['og:url'] = tep_href_link('product_info.php', 'products_id=' . $l_product->getData('products_id'), 'NONSSL', false);
 
-          $data['product:availability'] = ( $l_product->getQuantity() > 0 ) ? MODULE_HEADER_TAGS_PRODUCT_OPENGRAPH_TEXT_IN_STOCK : MODULE_HEADER_TAGS_PRODUCT_OPENGRAPH_TEXT_OUT_OF_STOCK;
+          $data['product:availability'] = ( $l_product->getData('products_quantity') > 0 ) ? MODULE_HEADER_TAGS_PRODUCT_OPENGRAPH_TEXT_IN_STOCK : MODULE_HEADER_TAGS_PRODUCT_OPENGRAPH_TEXT_OUT_OF_STOCK;
 
           $result = '';
           foreach ( $data as $key => $value ) {

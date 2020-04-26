@@ -39,8 +39,8 @@
 		  foreach($l_Products->getData() as $l_product) {
         //while ($best_seller = tep_db_fetch_array($best_sellers_query)) {
           $best_sellers[] = [
-            'link' => tep_href_link('product_info.php', 'products_id=' . (int)$l_product->getID()),
-            'text' => $l_product->getTitle(),
+            'link' => tep_href_link('product_info.php', 'products_id=' . (int)$l_product->getData('products_id')),
+            'text' => $l_product->getData('products_name'),
           ];
         }
 

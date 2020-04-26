@@ -7,11 +7,11 @@
       </tr>
       <?php
 
-		foreach($l_Products->getData() as $l_product)
+		foreach($l_products->getData() as $l_product)
 		{
 			echo '<tr>';
-			echo '  <td><a href="' . tep_href_link('product_info.php', 'products_id=' . $l_product->getID()) . '">' . $l_product->getTitle() . '</a></td>';
-        echo '  <td class="text-right">' . tep_date_short($l_product->getDateAvailable()) . '</td>';
+			echo '  <td><a href="' . tep_href_link('product_info.php', 'products_id=' . $l_product->getData('products_id')) . '">' . $l_product->getData('products_name') . '</a></td>';
+        echo '  <td class="text-right">' . tep_date_short($l_product->getData('products_date_available')) . '</td>';
         echo '</tr>'; 
 		}
 	

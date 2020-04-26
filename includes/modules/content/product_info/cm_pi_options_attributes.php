@@ -55,7 +55,7 @@ error_reporting(-1);
 					$text = $popt['products_options_values_name'];
 					
 					if ($popt['options_values_price'] != 0) {
-				  		$text .= ' (' . $popt['price_prefix'] . $currencies->display_price( $popt['options_values_price'], tep_get_tax_rate($l_product->getTaxClass())) .') ';
+				  		$text .= ' (' . $popt['price_prefix'] . $currencies->display_price( $popt['options_values_price'], tep_get_tax_rate($l_product->getData('products_tax_class_id'))) .') ';
 					}
 					$option_choices[] = ['id' => $popt['products_options_values_id'], 'text' => $text];
 			  

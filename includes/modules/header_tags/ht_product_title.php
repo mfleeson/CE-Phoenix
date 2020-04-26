@@ -21,7 +21,7 @@
 
       if (basename($PHP_SELF) == 'product_info.php') {
         if (isset($_GET['products_id']) && ($product_check == true)) {
-			$l_product = new Product((int)$_GET['products_id']);
+			$l_product = new product((int)$_GET['products_id']);
 /*          $product_info_query = tep_db_query(sprintf(<<<'EOSQL'
 SELECT pd.products_name, pd.products_seo_title
  FROM products p INNER JOIN products_description pd ON pd.products_id = p.products_id
@@ -30,10 +30,10 @@ EOSQL
             , (int)$_GET['products_id'], (int)$_SESSION['languages_id']));
           $product_info = tep_db_fetch_array($product_info_query);
 */
-          if ( tep_not_null($l_product->getSEOTitle()) && (MODULE_HEADER_TAGS_PRODUCT_TITLE_SEO_TITLE_OVERRIDE == 'True') ) {
-            $oscTemplate->setTitle($l_product->getSEOTitle() . MODULE_HEADER_TAGS_PRODUCT_SEO_SEPARATOR . $oscTemplate->getTitle());
+          if ( tep_not_null($l_product->getData('products_seo_title')) && (MODULE_HEADER_TAGS_PRODUCT_TITLE_SEO_TITLE_OVERRIDE == 'True') ) {
+            $oscTemplate->setTitle($l_product->getData('products_seo_title') . MODULE_HEADER_TAGS_PRODUCT_SEO_SEPARATOR . $oscTemplate->getTitle());
           } else {
-            $oscTemplate->setTitle($l_product->getTitle(). MODULE_HEADER_TAGS_PRODUCT_SEO_SEPARATOR . $oscTemplate->getTitle());
+            $oscTemplate->setTitle($l_product->getData('products_name'). MODULE_HEADER_TAGS_PRODUCT_SEO_SEPARATOR . $oscTemplate->getTitle());
           }
         }
       }

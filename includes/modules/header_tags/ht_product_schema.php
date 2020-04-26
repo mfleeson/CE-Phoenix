@@ -31,8 +31,8 @@ EOSQL
 
         if ( tep_db_num_rows($product_info_query) ) {
           $product_info = tep_db_fetch_array($product_info_query);*/
-		  $l_product = new Product((int)$_GET['products_id']);
-          $products_image = $l_product->getImage();
+		  $l_product = new product((int)$_GET['products_id']);
+          $products_image = $l_product->getData('products_image');
 		  
          // $pi_query = tep_db_query("SELECT image FROM products_images WHERE products_id = " . (int)$product_info['products_id'] . " ORDER BY sort_order LIMIT 1");
           
@@ -45,18 +45,18 @@ EOSQL
           $schema_product = [
             "@context"    => "https://schema.org",
             "@type"       => "Product",
-            "name"        => tep_db_output($l_product->getTitle()),
+            "name"        => tep_db_output($l_product->getData('products_name')),
             "image"       => tep_href_link('images/' . $products_image, '', 'NONSSL', false, false),
-            "url"         => tep_href_link('product_info.php', 'products_id=' . $l_product->getID(), 'NONSSL', false, false),
-            "description" => substr(trim(preg_replace('/\s\s+/', ' ', strip_tags($l_product->getDescription()))), 0, 197) . '...',
+            "url"         => tep_href_link('product_info.php', 'products_id=' . $l_product->getData('products_id'), 'NONSSL', false, false),
+            "description" => substr(trim(preg_replace('/\s\s+/', ' ', strip_tags($l_product->getData('products_description')))), 0, 197) . '...',
           ];
 
           if (tep_not_null($product_info['products_model'])) {
-            $schema_product['mpn'] = tep_db_output($l_product->getModel());
+            $schema_product['mpn'] = tep_db_output($l_product->getData('products_model')    );
           }
 
-          if (tep_not_null($l_product->getGTIN()) && defined('MODULE_CONTENT_PRODUCT_INFO_GTIN_LENGTH')) {
-            $schema_product['gtin' .  MODULE_CONTENT_PRODUCT_INFO_GTIN_LENGTH] = tep_db_output(substr($l_product->getGTIN(), 0-MODULE_CONTENT_PRODUCT_INFO_GTIN_LENGTH));
+          if (tep_not_null($l_product-$l_product->getData('products_gtin')) && defined('MODULE_CONTENT_PRODUCT_INFO_GTIN_LENGTH')) {
+            $schema_product['gtin' .  MODULE_CONTENT_PRODUCT_INFO_GTIN_LENGTH] = tep_db_output(substr($l_product-$l_product->getData('products_gtin'), 0-MODULE_CONTENT_PRODUCT_INFO_GTIN_LENGTH));
           }
 
           $schema_product['offers'] = [
@@ -69,17 +69,17 @@ EOSQL
           } else {
             $products_price = $currencies->display_raw($product_info['products_price'], tep_get_tax_rate($product_info['products_tax_class_id']));
           }*/
-		  $products_price = $currencies->display_raw($l_product->getFinalPrice(), tep_get_tax_rate($l_product->getTaxClass()));
+		  $products_price = $currencies->display_raw($l_product->getFinalPrice(), tep_get_tax_rate($l_product->getData('products_tax_class_id')));
 
           $schema_product['offers']['price'] = $products_price;
 
          /* $specials_expiry_query = tep_db_query("SELECT expires_date FROM specials WHERE status = 1 AND products_id = " . (int)$product_info['products_id']);
           if ($specials_expiry = tep_db_fetch_array($specials_expiry_query)) {*/
 		  
-            $schema_product['offers']['priceValidUntil'] = $l_product->getSpecialsExpiresDate();
+            $schema_product['offers']['priceValidUntil'] = $l_product->getData('expires_date');
          // }
 
-          $availability = ( $l_product->getQuantity() > 0 ) ? MODULE_HEADER_TAGS_PRODUCT_SCHEMA_TEXT_IN_STOCK : MODULE_HEADER_TAGS_PRODUCT_SCHEMA_TEXT_OUT_OF_STOCK;
+          $availability = ( $l_product->getData('products_quantity') > 0 ) ? MODULE_HEADER_TAGS_PRODUCT_SCHEMA_TEXT_IN_STOCK : MODULE_HEADER_TAGS_PRODUCT_SCHEMA_TEXT_OUT_OF_STOCK;
           $schema_product['offers']['availability'] = $availability;
 
           $schema_product['offers']['seller'] = [
@@ -89,7 +89,7 @@ EOSQL
 
           if ($product_info['manufacturers_id'] > 0) {
             // manufacturer class
-            $ht_brand = new manufacturer($l_product->getManufacturersId());
+            $ht_brand = new manufacturer($l_product->getData('manufacturers_id'));
 
             $schema_product['manufacturer'] = [
               "@type" => "Organization",
@@ -102,7 +102,7 @@ SELECT AVG(r.reviews_rating) AS average, COUNT(r.reviews_rating) AS count
  FROM reviews r
  where r.reviews_status = 1 AND r.products_id = 
 EOSQL
-            . (int)$l_product->getID());
+            . (int)$l_product->getData('products_id'));
           $average = tep_db_fetch_array($average_query);
           if ($average['count'] > 0) {
             $star_rating = round($average['average'], 0, PHP_ROUND_HALF_UP);

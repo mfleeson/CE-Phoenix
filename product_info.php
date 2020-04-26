@@ -20,7 +20,7 @@ ini_set('display_errors', 1);
 error_reporting(-1);
   require('includes/languages/' . $language . '/product_info.php');
 
-  $product_check = new Product((int)$_GET['products_id'],true); //tep_db_query("select count(*) as total from products p, products_description pd where p.products_status = '1' and p.products_id = '" . (int)$_GET['products_id'] . "' and pd.products_id = p.products_id and pd.language_id = '" . (int)$languages_id . "'");
+  $product_check = new product((int)$_GET['products_id'],true); //tep_db_query("select count(*) as total from products p, products_description pd where p.products_status = '1' and p.products_id = '" . (int)$_GET['products_id'] . "' and pd.products_id = p.products_id and pd.language_id = '" . (int)$languages_id . "'");
  // $product_check = tep_db_fetch_array($product_check_query);
 
   require('includes/template_top.php');
@@ -38,7 +38,7 @@ error_reporting(-1);
 
 <?php
   } else {
-	  $l_product = new Product((int)$_GET['products_id']);
+	  $l_product = new product((int)$_GET['products_id']);
 	 
   //  $product_info_query = tep_db_query("select p.*, pd.* from products p, products_description pd where p.products_status = '1' and p.products_id = '" . (int)$_GET['products_id'] . "' and pd.products_id = p.products_id and pd.language_id = '" . (int)$languages_id . "'");
    // $product_info = tep_db_fetch_array($product_info_query);

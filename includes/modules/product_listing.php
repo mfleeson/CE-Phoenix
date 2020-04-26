@@ -101,41 +101,41 @@
 										   
   //while ($listing = tep_db_fetch_array($listing_query)) {
   foreach($l_Products->getData() as $l_product) {
-    $prod_list_contents .= '<div class="card mb-2 is-product" data-is-special="' . (int)$l_product->isSpecial(). '" data-product-price="' . $currencies->display_raw($l_product->getFinalPrice(), tep_get_tax_rate($l_product->getTaxClass())) . '" data-product-manufacturer="' . max(0, (int)$l_product->getManufacturersId()) . '">' . PHP_EOL;
+    $prod_list_contents .= '<div class="card mb-2 is-product" data-is-special="' . (int)$l_product->isSpecial(). '" data-product-price="' . $currencies->display_raw($l_product->getFinalPrice(), tep_get_tax_rate($l_product->getData('products_tax_class_id'))) . '" data-product-manufacturer="' . max(0, (int)$l_product->getData('manufacturers_id')) . '">' . PHP_EOL;
       if (isset($_GET['manufacturers_id'])  && tep_not_null($_GET['manufacturers_id'])) {
-        $prod_list_contents .= '<a href="' . tep_href_link('product_info.php', 'manufacturers_id=' . (int)$_GET['manufacturers_id'] . '&products_id=' . (int)$l_product->getID()) . '">' . tep_image('images/' . $l_product->getImage(), htmlspecialchars($l_product->getTitle()), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, '', true, 'card-img-top') . '</a>' . PHP_EOL;
+        $prod_list_contents .= '<a href="' . tep_href_link('product_info.php', 'manufacturers_id=' . (int)$_GET['manufacturers_id'] . '&products_id=' . (int)$l_product->getData('products_id')) . '">' . tep_image('images/' . $l_product->getData('products_image'), htmlspecialchars($l_product->getData('products_name')), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, '', true, 'card-img-top') . '</a>' . PHP_EOL;
       } else {
-        $prod_list_contents .= '<a href="' . tep_href_link('product_info.php', (isset($sort) ? 'sort=' . $sort . '&' : '') . 'products_id=' . (int)$l_product->getID()) . '">' . tep_image('images/' . $l_product->getImage(), htmlspecialchars($l_product->getTitle()), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, '', true, 'card-img-top') . '</a>' . PHP_EOL;
+        $prod_list_contents .= '<a href="' . tep_href_link('product_info.php', (isset($sort) ? 'sort=' . $sort . '&' : '') . 'products_id=' . (int)$l_product->getData('products_id')) . '">' . tep_image('images/' . $l_product->getData('products_image'), htmlspecialchars($l_product->getData('products_name')), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, '', true, 'card-img-top') . '</a>' . PHP_EOL;
       }
 
       $prod_list_contents .= '<div class="card-body">' . PHP_EOL;
         $prod_list_contents .= '<h5 class="card-title">';
         if (isset($_GET['manufacturers_id']) && tep_not_null($_GET['manufacturers_id'])) {
-          $prod_list_contents .= '<a href="' . tep_href_link('product_info.php', 'manufacturers_id=' . (int)$_GET['manufacturers_id'] . '&products_id=' . (int)$l_product->getID()) . '">' . $l_product->getTitle() . '</a>';
+          $prod_list_contents .= '<a href="' . tep_href_link('product_info.php', 'manufacturers_id=' . (int)$_GET['manufacturers_id'] . '&products_id=' . (int)$l_product->getData('products_id')) . '">' . $l_product->getData('products_name') . '</a>';
         } else {
-          $prod_list_contents .= '<a href="' . tep_href_link('product_info.php', 'products_id=' . (int)$l_product->getID()) . '">' . $l_product->getTitle() . '</a>';
+          $prod_list_contents .= '<a href="' . tep_href_link('product_info.php', 'products_id=' . (int)$l_product->getData('products_id')) . '">' . $l_product->getData('products_name') . '</a>';
         }
         $prod_list_contents .= '</h5>' . PHP_EOL;
         $prod_list_contents .= '<h6 class="card-subtitle mb-2 text-muted">';
           if ($l_product->isSpecial() == 1) {
-            $prod_list_contents .= sprintf(IS_PRODUCT_SHOW_PRICE_SPECIAL, $currencies->display_price($l_product->getPrice(), tep_get_tax_rate($l_product->getTaxClass())), $currencies->display_price($l_product->getSpecialsPrice(), tep_get_tax_rate($l_product->getTaxClass())));
+            $prod_list_contents .= sprintf(IS_PRODUCT_SHOW_PRICE_SPECIAL, $currencies->display_price($l_product->getPrice(), tep_get_tax_rate($l_product->getData('products_tax_class_id'))), $currencies->display_price($l_product->getSpecialsPrice(), tep_get_tax_rate($l_product->getData('products_tax_class_id'))));
           }
           else {
-            $prod_list_contents .= sprintf(IS_PRODUCT_SHOW_PRICE, $currencies->display_price($l_product->getPrice(), tep_get_tax_rate($l_product->getTaxClass())));
+            $prod_list_contents .= sprintf(IS_PRODUCT_SHOW_PRICE, $currencies->display_price($l_product->getPrice(), tep_get_tax_rate($l_product->getData('products_tax_class_id'))));
           }
         $prod_list_contents .= '</h6>' . PHP_EOL;
-        if (tep_not_null($l_product->getSEODescription())) {
+        if (tep_not_null($l_product->getData('products_seo_description'))) {
           $prod_list_contents .= '<div class="pt-2 font-weight-lighter">';
-            $prod_list_contents .= $l_product->getSEODescription();
+            $prod_list_contents .= $l_product->getData('products_seo_description');
           $prod_list_contents .= '</div>' . PHP_EOL;
         }
       $prod_list_contents .= '</div>' . PHP_EOL;
 
       $prod_list_contents .= '<div class="card-footer bg-white pt-0 border-0">' . PHP_EOL;
         $prod_list_contents .= '<div class="btn-group" role="group">';
-          $prod_list_contents .= tep_draw_button(IS_PRODUCT_BUTTON_VIEW, '', tep_href_link('product_info.php', tep_get_all_get_params(array('action')) . 'products_id=' . (int)$l_product->getID()), NULL, NULL, 'btn-info btn-product-listing btn-view') . PHP_EOL;
-          $has_attributes = (tep_has_product_attributes((int)$l_product->getID()) === true) ? '1' : '0';
-          if ($has_attributes == 0) $prod_list_contents .= tep_draw_button(IS_PRODUCT_BUTTON_BUY, '', tep_href_link(basename($PHP_SELF), tep_get_all_get_params(array('action')) . 'action=buy_now&products_id=' . (int)$l_product->getID()), NULL, array('params' => 'data-has-attributes="' . $has_attributes . '" data-in-stock="' . (int)$l_product->inStock() . '" data-product-id="' . (int)$l_product->getID() . '"'), 'btn-light btn-product-listing btn-buy') . PHP_EOL;
+          $prod_list_contents .= tep_draw_button(IS_PRODUCT_BUTTON_VIEW, '', tep_href_link('product_info.php', tep_get_all_get_params(array('action')) . 'products_id=' . (int)$l_product->getData('products_id')), NULL, NULL, 'btn-info btn-product-listing btn-view') . PHP_EOL;
+          $has_attributes = (tep_has_product_attributes((int)$l_product->getData('products_id')) === true) ? '1' : '0';
+          if ($has_attributes == 0) $prod_list_contents .= tep_draw_button(IS_PRODUCT_BUTTON_BUY, '', tep_href_link(basename($PHP_SELF), tep_get_all_get_params(array('action')) . 'action=buy_now&products_id=' . (int)$l_product->getData('products_id')), NULL, array('params' => 'data-has-attributes="' . $has_attributes . '" data-in-stock="' . (int)$l_product->inStock() . '" data-product-id="' . (int)$l_product->getData('products_id') . '"'), 'btn-light btn-product-listing btn-buy') . PHP_EOL;
         $prod_list_contents .= '</div>' . PHP_EOL;
       $prod_list_contents .= '</div>' . PHP_EOL;
 

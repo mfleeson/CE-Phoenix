@@ -24,7 +24,7 @@
 
       $content_width = (int)MODULE_CONTENT_PI_NAME_CONTENT_WIDTH;
 
-      $products_name = $l_product->getTitle(); // ['products_name'];
+      $products_name = $l_product->getData('products_name'); // ['products_name'];
 
       $tpl_data = [ 'group' => $this->group, 'file' => __FILE__ ];
       include 'includes/modules/content/cm_template.php';

@@ -37,7 +37,7 @@
       $content_width = $this->content_width;
 
       if ($l_product->hasModel() == true) {
-        $products_model = $l_product->getModel();
+        $products_model = $l_product->getData('products_model');
         
         $tpl_data = ['group' => $this->group, 'file' => __FILE__];
         include 'includes/modules/block_template.php';

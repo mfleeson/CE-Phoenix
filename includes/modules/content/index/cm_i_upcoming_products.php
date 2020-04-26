@@ -21,9 +21,9 @@
     public function execute() {
       $content_width = MODULE_CONTENT_UPCOMING_PRODUCTS_CONTENT_WIDTH;
 
-  	  $l_Products = new Products() ;
-	  $l_Products->getUpcomingProducts();
-      if (count($l_Products->getData()) > 0) {
+  	  $l_products = new products() ;
+	  $l_products->getUpcomingProducts();
+      if (count($l_products->getData()) > 0) {
         $tpl_data = [ 'group' => $this->group, 'file' => __FILE__ ];
         include 'includes/modules/content/cm_template.php';
       }

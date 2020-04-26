@@ -25,14 +25,14 @@
       $thumbnail_width = MODULE_CONTENT_PI_GALLERY_CONTENT_WIDTH_EACH;
 
       $pi_image = $pi_thumb = null;
-      if (tep_not_null($l_product->getImage())) {
-        $album_name = sprintf(MODULE_CONTENT_PI_GALLERY_ALBUM_NAME, $l_product->getTitle());
+      if (tep_not_null($l_product->getData('products_image'))) {
+        $album_name = sprintf(MODULE_CONTENT_PI_GALLERY_ALBUM_NAME, $l_product->getData('products_name'));
         $album_exit = MODULE_CONTENT_PI_GALLERY_ALBUM_CLOSE;
 
         $pi_html = [];
-        $pi_html[0] = ['image' => $l_product->getImage(), 'htmlcontent' => $l_product->getTitle()];
+        $pi_html[0] = ['image' => $l_product->getData('products_image'), 'htmlcontent' => $l_product->getData('products_name')];
 
-      //  $pi_query = tep_db_query("select image, htmlcontent from $l_product->getImage()s where products_id = '" . (int)$product_info['products_id'] . "' order by sort_order");
+      //  $pi_query = tep_db_query("select image, htmlcontent from $l_product->getData('products_image')s where products_id = '" . (int)$product_info['products_id'] . "' order by sort_order");
         //$pi_total = tep_db_num_rows($pi_query);
 		  if($l_product->hasPIImages()){
 			  

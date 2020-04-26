@@ -23,7 +23,7 @@
 
       $content_width = (int)MODULE_CONTENT_PI_DESCRIPTION_CONTENT_WIDTH;
 
-      $product_description = stripslashes($l_product->getDescription());
+      $product_description = stripslashes($l_product->getData('products_description'));
 
       $tpl_data = [ 'group' => $this->group, 'file' => __FILE__ ];
       include 'includes/modules/content/cm_template.php';

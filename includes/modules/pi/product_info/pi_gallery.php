@@ -44,12 +44,12 @@
 
       $pi_image = $pi_thumb = null;
 
-      if (tep_not_null($l_product->getImage())) {
-        $album_name = sprintf(PI_GALLERY_ALBUM_NAME, $l_product->getTitle());
+      if (tep_not_null($l_product->getData('products_image'))) {
+        $album_name = sprintf(PI_GALLERY_ALBUM_NAME, $l_product->getData('products_name'));
         $album_exit = PI_GALLERY_ALBUM_CLOSE;
 
         $pi_html = [];
-        $pi_html[0] = ['image' => $l_product->getImage(), 'htmlcontent' => $l_product->getTitle()];
+        $pi_html[0] = ['image' => $l_product->getData('products_image'), 'htmlcontent' => $l_product->getData('products_name')];
 
         if($l_product->hasPIImages()){
 			  
@@ -66,6 +66,7 @@
 
         $active_image = array_shift($pi_html);
         $other_images = $pi_html;
+		  $other_img_indicator = $other_img = null;
 
         $modal_size = PI_GALLERY_MODAL_SIZE;
         
@@ -91,7 +92,7 @@
           }
           $pi_thumb .= '</div>';
 
-          $other_img_indicator = $other_img = null;
+          
           foreach ($other_images as $k => $v) {
             $n = $k+1;
             $other_img_indicator .= '<li data-target="#carousel" data-slide-to="' . $n . '" class="pointer"></li>';

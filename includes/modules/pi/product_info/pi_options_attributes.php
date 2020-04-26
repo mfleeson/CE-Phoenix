@@ -52,7 +52,7 @@ EOSQL
           $fr_required = 'required="required" aria-required="true" ';
         }
 
-        $tax_rate = tep_get_tax_rate($l_product->getTaxClass());
+        $tax_rate = tep_get_tax_rate($l_product->getData('products_tax_class_id'));
 
         $options = [];
 		  

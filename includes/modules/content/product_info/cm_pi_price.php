@@ -23,12 +23,12 @@
 
       $content_width = (int)MODULE_CONTENT_PI_PRICE_CONTENT_WIDTH;
 
-      $products_price = $currencies->display_price($l_product->getPrice(), tep_get_tax_rate($l_product->getTaxClass()));
+      $products_price = $currencies->display_price($l_product->getData('products_price'), tep_get_tax_rate($l_product->getData('products_tax_class_id')));
       $specials_price = null;
 
       if ($new_price = 
-$l_product->getSpecialsPrice()) {
-        $specials_price = $currencies->display_price($new_price, tep_get_tax_rate($l_product->getTaxClass()));
+$l_product->getData('specials_new_products_price')) {
+        $specials_price = $currencies->display_price($new_price, tep_get_tax_rate($l_product->getData('products_tax_class_id')));
       }
 
       $tpl_data = [ 'group' => $this->group, 'file' => __FILE__ ];
