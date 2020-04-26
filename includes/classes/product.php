@@ -8,7 +8,7 @@
  * Release 1.2
  */
 
-class Product {
+class product {
     public $_data = array();
 
     public function __construct( $pID, $check = false ) {
@@ -102,7 +102,7 @@ where pa.products_id ='" . ( int )$pID . "' AND pa.options_id = '" . ( int )$pro
                             $product_options[] = $options;
                         }
 
-                        $l_attrib = new ProductAttributes( $products_option_name, $product_options, $products_option_id, $languageid );
+                        $l_attrib = new productattributes( $products_option_name, $product_options, $products_option_id, $languageid );
 
                         $product_attributes[] = $l_attrib;
                     }
@@ -118,9 +118,11 @@ where pa.products_id ='" . ( int )$pID . "' AND pa.options_id = '" . ( int )$pro
     }
 
     public function getData( $key = null ) { 
-       return $this->_data[ $key ] ?? $this->_data;
+       return $this->_data[ $key ] ?? null;
     }
-
+	public function getDebugData( ) { 
+       return $this->_data;
+    }
     public function getLanguageData( $key = null, $languages_id ) { // If a $key exists return that otherwise return full data array
         if ( isset( $this->_data[ 'languages' ][ $languages_id ][ $key ] ) ) {
             return $this->_data[ 'languages' ][ $languages_id ][ $key ];

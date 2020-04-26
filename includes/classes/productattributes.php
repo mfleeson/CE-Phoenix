@@ -8,7 +8,7 @@
  * Release 1.1
  */
 
-class ProductAttributes {
+class productattributes {
     private $_data = array();
     public function __construct( $name, $options, $products_options_id, $language_id ) {
         $this->_data = [];
