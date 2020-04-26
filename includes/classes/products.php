@@ -125,7 +125,7 @@ class Products {
     }
 
 
-    public function getData( $key = null ) { // Get everything stored about the product
+    public function getData( $key = null ) { // Get everything stored or just the keyed
         if ( isset( $this->_data[ $key ] ) ) {
             return $this->_data[ $key ];
         }
