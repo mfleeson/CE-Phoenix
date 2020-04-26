@@ -125,7 +125,7 @@ where pa.products_id ='" . ( int )$pID . "' AND pa.options_id = '" . ( int )$pro
 
     }
 
-    function getData( $key = null ) { // If a $key exists return that otherwise return full data array
+    public function getData( $key = null ) { // If a $key exists return that otherwise return full data array
         if ( isset( $this->_data[ $key ] ) ) {
             return $this->_data[ $key ];
         }
@@ -133,7 +133,7 @@ where pa.products_id ='" . ( int )$pID . "' AND pa.options_id = '" . ( int )$pro
         return $this->_data;
     }
 
-    function getLanguageData( $key = null, $language ) { // If a $key exists return that otherwise return full data array
+    public function getLanguageData( $key = null, $language ) { // If a $key exists return that otherwise return full data array
         if ( isset( $this->_data[ 'languages' ][ $languages_id ][ $key ] ) ) {
             return $this->_data[ 'languages' ][ $languages_id ][ $key ];
         }
@@ -185,6 +185,7 @@ where pa.products_id ='" . ( int )$pID . "' AND pa.options_id = '" . ( int )$pro
 
         return $this->_data[ 'Attributes' ];
     }
+	
     public function getAttributeCount() {
 
         return sizeof( $this->_data[ 'Attributes' ] );

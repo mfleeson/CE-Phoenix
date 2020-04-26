@@ -47,7 +47,7 @@
 
         // data attributes
         $box_attr = '';
-        foreach ( $data as $key => $value ) {
+        foreach ( $data as $key => $value ) { 
           $box_attr .= ' ' . tep_output_string_protected($key) . '="' . tep_output_string_protected($value) . '"';
         }
         // product title
