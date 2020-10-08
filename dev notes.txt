@@ -1,7 +1,7 @@
 NOTES
 
-$l_product->getID()
-$l_product->getTitle()
+$l_product->getID()		$l_product->getData('products_id')
+$l_product->getTitle()		$l_product->getData('products_name')
 $l_product->getModel()
 $l_product->getQuantity()
 $l_product->hasModel()
@@ -10,15 +10,15 @@ $l_product->getDateAvailable()
 $l_product->getDescription()
 $l_product->getGTIN()
 
-$l_product->getImage()
+$l_product->getImage()		$l_product->getData('image')
 $l_product->getLastModified()
-$l_product->getManufacturersId()
+$l_product->getManufacturersId()	$l_product->getData('manufacturers_id')
 $l_product->getFinalPrice()
 $l_product->getPrice()
 $l_product->getProductsOrdered()
 $l_product->getSpecialsPrice()
 $l_product->getSpecialsExpiresDate()
-$l_product->getTaxClass()
+$l_product->getTaxClass()	$l_product->getData('tax_class')
 
 $l_product->getWeight()
 $l_product->isSpecial()
