@@ -1,0 +1,32 @@
+/*
+   Products Links - Allow linking of different products together and display
+   (C) Mark Fleeson. mark@burninglight.co.uk 2020 
+   v 0.1
+   The code below are stored procedures for MYSQL. They make it easier to bulk load linked products.
+   Copy/paste where it indicates into your mysql command window and run on your phoenix database.
+   I create excel files of products_ids and the id's of products I want to link and then add excel column 'Call CreateLinkedProducts(n1,n2)'.
+   Get in touch if you get stuck.
+*/
+
+/*copy from here*/
+DELIMITER $$
+
+DROP PROCEDURE IF EXISTS `CreateLinkedProducts`$$
+
+CREATE  PROCEDURE `CreateLinkedProducts`(l_products_id INT(11),l_linked_products_id INT(11))
+BEGIN
+REPLACE  INTO products_links VALUES(l_products_id,l_linked_products_id,TRUE);
+REPLACE  INTO products_links VALUES(l_linked_products_id,l_products_id,TRUE);
+    END$$
+
+
+
+DROP PROCEDURE IF EXISTS `CreateLinkedProducts-onewayonly`$$
+
+CREATE PROCEDURE `CreateLinkedProducts-onewayonly`(l_products_id INT(11),l_linked_products_id INT(11))
+BEGIN
+REPLACE INTO products_links VALUES(l_products_id,l_linked_products_id,TRUE);
+END$$
+
+DELIMITER ;
+/*to here*/
